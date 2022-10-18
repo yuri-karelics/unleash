@@ -5,6 +5,7 @@ figure {
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
     padding: var(--ifm-pre-padding);
     margin-inline: 0;
+    float: left;
 }
 
 figure img {
@@ -21,3 +22,25 @@ figcaption {
     padding-inline: var(--ifm-pre-padding);
     border-inline-start: 5px solid var(--ifm-color-primary);
 }
+
+
+/* clear floating figures */
+:global(.markdown) * {
+    clear: both;
+}
+
+/*
+
+Desired figure folding behavior (for narrow / non-full width images):
+
+From a certain (container) width and up, images should float to one side. The text should wrap around it.
+
+This can be achieved (sorta) by using: `float: left; max-width: 50%;`
+
+When the container is smaller than the specified size, the image should still take up the full width.
+
+If the image is at the end of a paragraph, then the following heading should _not_ wrap around the image. In general: headings should _never_ wrap around the figures.
+
+
+
+ */
