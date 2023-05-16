@@ -1,0 +1,59 @@
+name: 'Notify enterprise of commit in main'
+
+on:
+  push:
+    branches:
+      - main
+# not sure if we will have all the payload as the push to main has.
+#  workflow_run:
+#    workflows: [ 'Publish to npm' ]
+#    types: [ completed ]
+#    branches:
+#      - 'main'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build static assets
+        run: |
+          cd frontend
+          yarn install --frozen-lockfile
+          yarn build
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      - name: Get the commit hash
+        id: get_commit_hash
+        run: |
+          COMMIT_HASH=${{ github.sha }}
+          echo "Commit hash: $COMMIT_HASH"
+          echo "::set-output name=COMMIT_HASH::$COMMIT_HASH"
+      - name: Publish static assets to S3
+        run: |
+          aws s3 cp frontend/build s3://getunleash-static/unleash/commits/${{ steps.get_commit_hash.outputs.COMMIT_HASH }} --recursive
+      - name: Trigger sync
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'ivarconr',
+              repo: 'unleash-enterprise',
+              workflow_id: 'continuous_version_sync.yaml',
+              ref: 'master',
+              inputs: {
+                 repository: "${{ github.repository }}",
+                 commit: "${{ github.event.head_commit.id }}",
+                 actor: "${{ github.event.head_commit.committer.username }}",
+                 message: ${{ toJSON(github.event.head_commit.message) }},
+              }
+            })

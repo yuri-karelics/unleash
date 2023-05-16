@@ -33,10 +33,6 @@ const flags = {
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
     ),
-    crOnVariants: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CR_ON_VARIANTS,
-        false,
-    ),
     strictSchemaValidation: parseEnvVarBoolean(
         process.env.UNLEASH_STRICT_SCHEMA_VALIDTION,
         false,
@@ -56,12 +52,8 @@ const flags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, false),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
-    strategyTitle: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_TITLE,
-        false,
-    ),
-    strategyDisable: parseEnvVarBoolean(
-        process.env.UNLEASH_STRATEGY_DISABLE,
+    strategyImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_STRATEGY_IMPROVEMENTS,
         false,
     ),
     googleAuthEnabled: parseEnvVarBoolean(

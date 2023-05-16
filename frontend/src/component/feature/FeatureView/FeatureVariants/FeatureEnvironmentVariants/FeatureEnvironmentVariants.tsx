@@ -23,7 +23,6 @@ import useToast from 'hooks/useToast';
 import { EnvironmentVariantsCopyFrom } from './EnvironmentVariantsCopyFrom/EnvironmentVariantsCopyFrom';
 import { PushVariantsButton } from './PushVariantsButton/PushVariantsButton';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -42,7 +41,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 }));
 
 export const FeatureEnvironmentVariants = () => {
-    const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -69,11 +67,9 @@ export const FeatureEnvironmentVariants = () => {
         () =>
             feature?.environments?.map(environment => ({
                 ...environment,
-                crEnabled:
-                    uiConfig.flags.crOnVariants &&
-                    isChangeRequestConfigured(environment.name),
+                crEnabled: isChangeRequestConfigured(environment.name),
             })) || [],
-        [feature.environments, uiConfig.flags.crOnVariants]
+        [feature.environments]
     );
 
     const createPatch = (

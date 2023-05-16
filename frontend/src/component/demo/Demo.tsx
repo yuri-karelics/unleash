@@ -75,12 +75,20 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
         });
     };
 
+    const closeGuide = () => {
+        setTopic(-1);
+        setStep(0);
+    };
+
     if (!uiConfig.flags.demo) return children;
 
     return (
         <>
             <DemoBanner
                 onPlans={() => {
+                    closeGuide();
+                    setWelcomeOpen(false);
+
                     setPlansOpen(true);
 
                     trackEvent('demo', {
@@ -95,6 +103,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 open={welcomeOpen}
                 onClose={() => {
                     setWelcomeOpen(false);
+
                     setExpanded(false);
 
                     trackEvent('demo', {
@@ -106,6 +115,7 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 }}
                 onStart={() => {
                     setWelcomeOpen(false);
+
                     onStart();
 
                     trackEvent('demo', {
@@ -145,6 +155,9 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                     setTopic(topic);
                     setStep(0);
 
+                    setWelcomeOpen(false);
+                    setPlansOpen(false);
+
                     trackEvent('demo', {
                         props: {
                             eventType: 'start_topic',
@@ -154,6 +167,9 @@ export const Demo = ({ children }: IDemoProps): JSX.Element => {
                 }}
                 topics={TOPICS}
                 onWelcome={() => {
+                    closeGuide();
+                    setPlansOpen(false);
+
                     setWelcomeOpen(true);
 
                     trackEvent('demo', {

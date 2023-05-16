@@ -1,5 +1,5 @@
 import { VFC, useState } from 'react';
-import { Alert } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 import BlockIcon from '@mui/icons-material/Block';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
@@ -11,14 +11,16 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyChangeRequestAlert } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert';
 import { IDisableEnableStrategyProps } from './IDisableEnableStrategyProps';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
-    const { projectId, environmentId } = props;
+    const { projectId, environmentId, featureId } = props;
     const [isDialogueOpen, setDialogueOpen] = useState(false);
     const { onDisable } = useEnableDisable({ ...props });
     const { onSuggestDisable } = useSuggestEnableDisable({ ...props });
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const isChangeRequest = isChangeRequestConfigured(environmentId);
+    const { refetchFeature } = useFeature(projectId, featureId);
 
     const onClick = (event: React.FormEvent) => {
         event.preventDefault();
@@ -26,6 +28,7 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
             onSuggestDisable();
         } else {
             onDisable();
+            refetchFeature();
         }
         setDialogueOpen(false);
     };
@@ -43,6 +46,18 @@ const DisableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 type="button"
             >
                 <BlockIcon />
+                <ConditionallyRender
+                    condition={Boolean(props.text)}
+                    show={
+                        <Typography
+                            variant={'body1'}
+                            color={'text.secondary'}
+                            sx={{ ml: theme => theme.spacing(1) }}
+                        >
+                            Disable
+                        </Typography>
+                    }
+                />
             </PermissionIconButton>
             <Dialogue
                 title={
@@ -108,6 +123,18 @@ const EnableStrategy: VFC<IDisableEnableStrategyProps> = ({ ...props }) => {
                 type="button"
             >
                 <TrackChangesIcon />
+                <ConditionallyRender
+                    condition={Boolean(props.text)}
+                    show={
+                        <Typography
+                            variant={'body1'}
+                            color={'text.secondary'}
+                            sx={{ ml: theme => theme.spacing(1) }}
+                        >
+                            Disable
+                        </Typography>
+                    }
+                />
             </PermissionIconButton>
             <Dialogue
                 title={

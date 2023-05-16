@@ -212,17 +212,7 @@ export const FeatureStrategyForm = ({
             </FeatureStrategyEnabled>
             <StyledHr />
             <ConditionallyRender
-                condition={Boolean(uiConfig.flags.SE)}
-                show={
-                    <FeatureStrategySegment
-                        segments={segments}
-                        setSegments={setSegments}
-                        projectId={projectId}
-                    />
-                }
-            />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.strategyTitle)}
+                condition={Boolean(uiConfig?.flags?.strategyImprovements)}
                 show={
                     <FeatureStrategyTitle
                         title={strategy.title || ''}
@@ -232,6 +222,16 @@ export const FeatureStrategyForm = ({
                                 title,
                             }));
                         }}
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(uiConfig.flags.SE)}
+                show={
+                    <FeatureStrategySegment
+                        segments={segments}
+                        setSegments={setSegments}
+                        projectId={projectId}
                     />
                 }
             />

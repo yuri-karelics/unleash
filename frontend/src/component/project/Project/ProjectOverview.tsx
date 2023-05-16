@@ -8,7 +8,6 @@ import ProjectInfo from './ProjectInfo/ProjectInfo';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ProjectStats } from './ProjectStats/ProjectStats';
 
@@ -43,7 +42,6 @@ const ProjectOverview = () => {
         project;
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
-    const { uiConfig } = useUiConfig();
 
     useEffect(() => {
         setLastViewed(projectId);
